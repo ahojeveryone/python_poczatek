@@ -56,7 +56,7 @@ OBIEKT = przykład elementu klasy
 Klasa definiuje nowy typ w programie
 
 **Koncepcje**:
-- **Enkapsulacja** – prawo do prywatności
+- **Enkapsulacja** – prawo do prywatności - dzięki niemu stan obiektu może zostać zmodyfikowany jedynie poprzez wywołanie funkcji na tymże obiekcie (a więc pośrednio); obiektów z zewnątrz nie interesuje w jaki sposób zmienia się zestaw danych, a jedynie jakie dane są przez ten obiekt dostarczane (zachowanie jest dla nas **abstrakcyjne**); dzięki temu usunikamy kaskadowego nanoszenia zmian; 
 - **Abstrakcja** – możliwość definiowania poszczególnych elementów w sposób ogólny, bez podawania szczegółów
 - **Dziedziczenie** – możliwość dziedziczenia cech innych obiektów
 - **Kompozycja** – możliwość zawierania w sobie czegoś/ bycia częścią czegoś
@@ -131,3 +131,67 @@ def __init__(self, nazwa_cechy):
 - zwraca klasę obiektu
 - użycie: `obiekt.__class__`
 
+### Enkapsulacja 
+Mamy dwie metody wprowadzenia enkapsulacji w Pythonie:
+1. zmienne/funkcje, które mają być prywatne definiujemy w konstruktorze dodając do nazwy znak _ i używamy ich tylko wewnątrz klasy, tj.
+``` python
+class Student:
+
+    def __init__(self):
+        self._private_value = 7
+        self.normal_value = 35
+       
+    def _private_function(self):
+        ...
+```
+Jeśli użyjemy ich na zewnątrz, to Python zwróci nam odpowiedni komuniakt ostrzegający (ale wszystko się i tak wykona).
+2. zmienne/funkcje, które mają być prywatne definiujemy w konstruktorze dodając do nazwy znak __ - tych nie można już użyć na zewnątrz, bo w konsoli zostanie zwrócony błąd
+``` python
+class Student:
+
+    def __init__(self):
+        self.__private_value = 7
+        self.normal_value = 35
+       
+    def __private_function(self):
+        ...
+```
+Uwaga! Do tak zdefiniowanych zmiennych/funkcji nadal możemy się dostać dodając na początku `_[nazwa_klasy]`, tj.
+``` python
+school = School() 
+school._Student__private_value = 8
+school._Student__private_function()
+```
+
+### Metody i pola
+W Pythonie rozróżniamy:
+- **metody i pola obiektu** - dotyczą bezpośrednio danego obiektu klasy/ mogą być wykonane na konktretnym obiekcie klasy
+- **metody i pola klasy** - dotyczy całej klasy; zmienne klasy zapisujemy drukowanymi literami (traktujemy jako stałe), natomiast dla metod klasy przed ich definicją dajemy dekorator `@classmethod`
+
+``` python
+class ClassName:
+
+    CLASS_VARIABLE = ...
+    
+    @classmethod   
+    def class_function(cls, ...):
+        ... cls.CLASS_VARIABLE ...
+```
+Do metod klasy odwołujemy się pisząc `ClassName.class_function()`, natomiast do pól klasy odwołujemy się na dwa sposoby (w zależności od miejsca) - albo przez klasę, tj. `cls.CLASS_VARIABLE` lub `ClassName.CLASS_VARIABLE`, albo przez już zdefiniowany obiekt klasy, tj. `self.CLASS_VARIABLE` lub `class_object.CLASS_VARIABLE`.
+
+- **metody statyczne** - funkcje umieszczone wewnątrz klasy, które nie przyjmują argumentów `self` i `cls`; definijemy je zapisując przed nimi dekorator `@staticmethod`; wywołujemy ją za pomocą składni `ClassName.static_method()`; metody statyczne stosujemy jeżeli klasę chcemy potraktować jako pewien zbiór funkcji (podobnie możemy robić ze stałymi - grupować je w klasie )
+
+### Funkcje jako obiekty
+Funkcje możemy traktować jako obiekty i tym samym:
+- tworzyć nowe funkcje przypisując do nich już istniejącą `new_function = original_function`
+- podawać funkcje jako argumenty innych funkcji `def merged_func(first_func, second_func)`
+
+*Zastosowanie:*
+1. Często funkcji podaje się jako argumenty innych funkcji wtedy, kiedy chcemy **posortować obiekty**. Używamy wtedy funkcji `.sort(key=function)`, która działa w ten sposób, że dla każdego obiektu wyliczana jest wartość funkcji podanej jako `key`, a następnie wartości te są porównywane i sortowane.
+2. Modyfikacja ogólnych algorytmów, czyli modyfikowanie jakiegoś działania.
+
+### Lambda - funkcja anonimowa
+Funkcja niepowiązana z żadną nazwą, wykorzystywana np. przy sortowaniu
+``` python
+objects_list.sort(key=lambda func_arguments: sort_func())
+```
