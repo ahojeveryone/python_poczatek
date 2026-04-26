@@ -595,3 +595,67 @@ def run_example():
 ```
 - `namedtuple` możemy traktować tak samo jak `tuple`, czyli odwoływać się do poszczególnych elementów korzystając z indeksów
 - po `namedtuple` można również iterować
+
+
+### Dataset
+- problem z klasami: musimy wielokrotnie powtarzać pola klasy (np. w konstruktorze i innych funkcjach dunder)
+- specjalna adnotacja, dzięki której python może zaimplementować za nas odpowiednie implementacje metod dunder takich jak `__init__, __repr__, __eq__` na podstawie podanej listy pól
+- zastosowanie: klasa jako prosty pojemnik na dane
+``` python
+from dataclasses import dataclass
+
+ @dataclass
+ class Human:
+    first_name: str
+    last_name: str
+    age: int
+```
+- w pythonie nie deklarujemy typów zmiennych (python zczytuje je na podstawie wartości przypisanych do pól); różnicę stanowi `dataclass`, dla którego te typy deklarujemy (*type annotation*)
+- w `dataclass` możemy również pisać metody (pamiętając o argumencie `self`)
+- `dataclass` = automatyzacja powtarzalnych się czynności
+- typami w *type annotation* mogą być też zdefiniowane przez nas typy (klasy)
+- możemy definiować wartości domyślne, ale tylko dla pól na końcu
+``` python
+ @dataclass
+ class Human:
+    first_name: str
+    last_name: str
+    age: int = 30 #30 jest wartością domyślą
+```
+- w możemy także zdefiniować pola klasy (stałe) - `ClassVar`
+``` python
+ @dataclass
+ class Grade:
+    value: int
+    FAILING_GRADE: ClassVar = 1
+```
+- podając jako wartość domyślą typ mutable musimy skorzystać ze specjalnej funkcji `default_factory`:
+``` python
+from dataclasses import dataclass, field
+from typing import List
+
+@dataclass
+class Human:
+   first_name: str
+   last_name: str
+   devices: List[str] = field(default_factory=list)
+```
+- klasa jest typem *mutable* - zastosowanie `dataclass` i parametru `frozen` pozwala stworzyć klasę, któr będzie emulować właściwości *immutable*
+``` python
+@dataclass(frozen=True)
+class Money:
+    dollars: int
+    cents: int
+```
+
+#### Dataclass - metody
+- `__post_init__()` - metoda wykonywana po inicjalizacji obiektu
+- `dataclasses.as_dict()`
+- `dataclasses.as_tuple()`
+- `dataclasses.is_dataclass()`
+
+#### Dataclass - zastosowania
+- klasa jako pojemnik na dane (brak metod)
+- do stworzenia własnego typu immutable (`frozen=True`)
+- jako prosta klasa - metody, dane, "standardowy" konstruktor
+- gdy potrzebujemy "standardowej" implementacji `__eq__` albo `__repr__`
