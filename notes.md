@@ -659,3 +659,58 @@ class Money:
 - do stworzenia własnego typu immutable (`frozen=True`)
 - jako prosta klasa - metody, dane, "standardowy" konstruktor
 - gdy potrzebujemy "standardowej" implementacji `__eq__` albo `__repr__`
+
+
+### Enum
+- typ wyliczeniowy definiowany jako klasa
+- zbiór nazw wraz z wypisanymi do nich wartościami liczbowymi
+``` python
+from enum import Enum
+
+class Color(Enum):
+    RED = 1
+    GREEN = 2
+    BLUE = 3
+```
+- dla przykładu `Color.RED` jest instacją enuma; instancja posiada nazwę i wartość
+``` python
+red = Color.RED
+print(red)          #Color.RED
+print(red.name)     #RED
+print(red.value)    #1
+```
+- `enum` ogranicza błędy, np. litrówki
+- można też łatwo tworzyć instancje enuma
+``` python
+color_from_value = Color(1)
+color_from_name = Color[RED]
+# color_from_value == color_from_name
+```
+- w enumie można tworzyć metody
+- w enumie nie musimy przypisywać konkretnych wartości do nazw, jeżeli nie są dla nas istotne i skupiamy się tylko na nazwach; funkcja `auto()` zwraca jako wartości kolejne liczby całkowite
+``` python
+from enum import Enum, auto
+
+class Color(Enum):
+    RED = auto()
+    GREEN = auto()
+    BLUE = auto()
+```
+- można samodzielnie zdefiniować funkcję `auto()` tworząc klasę dziedziczną do Enum i definiując w niej funkcję specjalną `_generate_next_value_`; `name` odnosi się do klucza instancji
+``` python
+class AutoName(Enum):
+    def _generate_next_value_(name, start, count, last_values):
+        return name
+        
+class Color(AutoName):
+    RED = auto()
+    GREEN = auto()
+    BLUE = auto()
+    
+print(red.value)    #RED
+```
+
+
+
+# PythON: Początek >> Środowisko i biblioteki
+**virtualenv** = virtual environment - środowisko tworzone per projekt, żebyśmy mogli korzystać osobno z bibliotek i unikali konfliktów w przypadku zmiany wersji takie biblioteki
