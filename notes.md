@@ -714,3 +714,9 @@ print(red.value)    #RED
 
 # PythON: Początek >> Środowisko i biblioteki
 **virtualenv** = virtual environment - środowisko tworzone per projekt, żebyśmy mogli korzystać osobno z bibliotek i unikali konfliktów w przypadku zmiany wersji takie biblioteki
+
+#### Sposoby instalacji bibliotek:
+- z poziomu pliku .py zapisujemy `import [nazwa biblioteki]`, po czym klikamy alt+enter, a następnie *Install package [nazwa biblioteki]* 
+- z poziomu paska zadań: *Settings -> Project: [nazwa projektu] -> Python Interpreter*
+- z poziomu konsoli: należy wejść do folderu *Scripts* (przy pomocy komendy `cd`), następnie wykonać `activate`, zainstalować odpowiednią bibliotekę komendą `pip install [nazwa biblioteki]` i wyjść z wirtualnego środowisku wykonując `deactivate`;
+ import można sprawdzić wchodząc comendą `python` do pythona i próbując zaimportować daną bibliotekę komendą `import [nazwa biblioteki]`
